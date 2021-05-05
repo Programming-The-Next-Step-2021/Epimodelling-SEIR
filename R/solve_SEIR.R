@@ -2,7 +2,7 @@
 #This is a numerical solver for the system of differential equations used in SEIR
 #Author: Bence Gergely
 #Solver: Euler's method
-#Version: V1_05_05
+#Version: solve_SEIR_05_05
 #Language: R
 #Language version: 4.0.5
 #Variables used:
