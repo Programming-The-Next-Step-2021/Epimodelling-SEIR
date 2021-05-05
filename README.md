@@ -1,8 +1,8 @@
 # Epimodelling-SEIR
 R package and Shiny app for SEIR models
 
-## The main aim of this project is twofold. 
-First, I am creating a set of tools with which users can better understand the dynamics of an epidemic. These tools include R functions where the user can change the parameter values and inspect the results and a resulting simple Shiny application where these parameter changes can be made dynamically.
+## The main aim of this project
+The main aim of this project is twofold. First, I am creating a set of tools with which users can better understand the dynamics of an epidemic. These tools include R functions where the user can change the parameter values and inspect the results and a resulting simple Shiny application where these parameter changes can be made dynamically.
 
 Second, the R package will be capable of estimating the parameters of the system when observed data is present.
 
@@ -21,4 +21,9 @@ The following system of differential equation encapsulates the model, where beta
 ![Model-I](https://latex.codecogs.com/png.latex?\inline&space;\frac{dI}{dt}&space;=&space;a&space;E&space;-&space;(\gamma&space;&plus;&space;\mu)I)
 
 ![Model-R](https://latex.codecogs.com/png.latex?\inline&space;\frac{dR}{dt}&space;=&space;\gamma&space;I&space;-&space;\mu&space;R)
+
+## Contact
+Email: gergely.bence98@outlook.com
+
+[Twitter](https://twitter.com/GergelyBence7): @GergelyBence7
 
