@@ -1,17 +1,3 @@
-################################################################################################
-#This is a plotting function for SEIR previously solved by the solve_SEIR
-#Author: Bence Gergely
-#Version: plot_SEIR_05_05
-#Language: R
-#Language version: 4.0.5
-#Variables used:
-###res = matrix of results from solve_SEIR
-###main = main title of the graph
-#Reference:
-### https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology
-### https://fabiandablander.com/r/Nonlinear-Infection.html
-###############################################################################################
-
 #' @export
 
 plot_SIRS <- function(res, main = '') {
@@ -32,4 +18,4 @@ plot_SIRS <- function(res, main = '') {
   )
 }
 
-#commiting small change to see this working
+
