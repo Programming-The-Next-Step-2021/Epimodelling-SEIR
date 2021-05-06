@@ -1,0 +1,15 @@
+Package: Epimodelling
+Title: Compartmental models in epidemiology
+Version: 0.0.1
+Authors@R: 
+    person(given = "Bence",
+           family = "Gergely",
+           role = c("aut", "cre"),
+           email = "gergely.bence98@outlook.com",
+           comment = c(ORCID = "0000-0001-9736-0229"))
+Description: Currently the package is under development
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
