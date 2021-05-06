@@ -1,4 +1,31 @@
-#' @export
+#'Solve the SEIR system of differential equations
+#'
+#'The function \emph{solve_SEIR} simulates data
+#'under the SEIR model
+#'
+#'@param N Population size
+#'@param S0 Initial number of the susceptible people
+#'@param E0 Initial number of the Exposed people
+#'@param I0 Initial number of Infectious people (N = S0 + E0 + I0 + R0 is assumed)
+#'@param mu Mortality rate (for simplicity birth rate and mortality is
+#'assumed to be equal)
+#'@param beta Contact rate
+#'@param a Incubation period
+#'@param gamma Recovery rate
+#'@param delta_t The rate of change in the time.
+#'@param times The number of iteration (delta_t * times = days)
+#'
+#'
+#'@return A \emph{times} length list of the values of the model parameters:
+#'S, E, I, R and delta_t. This list is the numerical solution of the system.
+#'
+#'
+#'@examples
+#
+#'res <- solve_SEIR(1000, 500, 300, 200, 0.05, 0.8, 1, 0.3)
+#'head(res)
+#'
+#'@export
 
 solve_SEIR <- function(N, S0, E0, I0,  mu, beta, a, gamma, delta_t = 0.01, times = 1000){
 
