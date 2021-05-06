@@ -1,11 +1,16 @@
 Package: Epimodelling
-Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Compartmental Epidemic Modelling
+Version: 0.0.1
+Authors@R: 
+    person(given = "Bence",
+           family = "Gergely",
+           role = c("aut", "cre"),
+           email = "gergely.bence98@outlook.com",
+           comment = c(ORCID = "0000-0001-9736-0229"))
+Description: Package is under development.
+Currently the package can simulate and visualise under an SEIR model
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
