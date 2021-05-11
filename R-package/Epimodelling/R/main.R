@@ -12,5 +12,5 @@
 #' \emph{interact_SEIR}
 #'
 #' @docType package
-#' @name Epimodeller
+#' @name Epimodelling
 NULL
