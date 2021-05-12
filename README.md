@@ -23,7 +23,9 @@ The following system of differential equation encapsulates the model, where beta
 ![Model-R](https://latex.codecogs.com/png.latex?\inline&space;\frac{dR}{dt}&space;=&space;\gamma&space;I&space;-&space;\mu&space;R)
 
 ## Contact
+Bence Gergely 
 Email: gergely.bence98@outlook.com
 
 [Twitter](https://twitter.com/GergelyBence7): @GergelyBence7
+
 
