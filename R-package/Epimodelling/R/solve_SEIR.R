@@ -72,3 +72,6 @@ solve_SEIR <- function(N, S0, E0, I0,  mu, beta, a, gamma, delta_t = 0.01, times
   return(res)
 
 }
+
+proba <- solve_SEIR(100, 50, 20, 30, 0.01, 0.9, 0.1, 0.6)
+pl <- plot_SIRS(proba)
