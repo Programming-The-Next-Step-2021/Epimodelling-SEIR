@@ -12,3 +12,4 @@ test_that("check the class and length of the list in Epimodeller()", {
 
 })
 
+#expand this test more
