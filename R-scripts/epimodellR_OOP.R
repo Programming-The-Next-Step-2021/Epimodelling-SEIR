@@ -3,7 +3,7 @@ epimodellR <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
   
   type <- match.arg(type)
   variables <- strsplit(type, "")
-  variables <- unlist(variables)
+  variables <- unique(unlist(variables))
 
   #function for userinput  
   userinputR <- function(variable, parameters){
@@ -48,8 +48,9 @@ epimodellR <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
         par_values[par] <- readline(prompt = paste("Please insert the", parameters[par], "value!"))
         
         tt <- tryCatch(as.integer(par_values[par]),error=function(e) e, warning=function(w) w)
-        
       }
+      
+    par_values <- as.numeric(par_values)  
       
     }
     

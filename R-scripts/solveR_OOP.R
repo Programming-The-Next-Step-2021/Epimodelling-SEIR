@@ -4,7 +4,9 @@ solve <- function(obj, ...){
   UseMethod("solve", obj)
 }
 
-solve.Epimodel <- function(obj, delta_t = 0.01, times = 1000){
+solve.Epimodel <- function(obj, delta_t = 0.01, days = 10){
+  
+  times <- days / delta_t
   
   #setting up a container
   res <- matrix(0, nrow = times, ncol = length(obj$variables) + 1, 
@@ -34,6 +36,6 @@ solve.Epimodel <- function(obj, delta_t = 0.01, times = 1000){
   
 }
 
-  proba_res <- solve(proba)
+
   
   
