@@ -1,10 +1,67 @@
 #OOP version of the 
-
 epimodellR <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
   
   type <- match.arg(type)
   variables <- strsplit(type, "")
-  variables <- unlist(variables)
+  variables <- unique(unlist(variables))
+
+  #function for userinput  
+  userinputR <- function(variable, parameters){
+    
+    #container
+    var_values <- numeric()
+    par_values <- numeric()
+    #var values
+    for(vars in 1:length(variable)){
+      var_values[vars] <- readline(prompt = paste("Please insert the", variable[vars], "value!"))
+      
+      tt <- tryCatch(as.integer(var_values[vars]),error=function(e) e, warning=function(w) w)
+      
+      while(is(tt, "warning")){
+        cat("The parameters need to be in numerical format!")
+        var_values[vars] <- readline(prompt = paste("Please insert the", variable[vars], "value!"))
+        
+        tt <- tryCatch(as.integer(var_values[vars]),error=function(e) e, warning=function(w) w)
+        
+      }
+      
+    }
+    
+    var_values <- as.numeric(var_values)
+    
+    #normalisation of the variables to sum to 1 (as 1 is the population size)
+    if(sum(var_values) != 1){
+      var_values <- var_values / sum(var_values)
+    }
+    
+    #adding the constant population size
+    var_values[length(var_values) + 1] <- 1
+    
+    
+    for(par in 1:length(parameters)){
+      par_values[par] <- readline(prompt = paste("Please insert the", parameters[par], "value!"))
+      
+      tt <- tryCatch(as.integer(par_values[par]),error=function(e) e, warning=function(w) w)
+      
+      while(is(tt, "warning")){
+        cat("The parameters need to be in numerical format!")
+        par_values[par] <- readline(prompt = paste("Please insert the", parameters[par], "value!"))
+        
+        tt <- tryCatch(as.integer(par_values[par]),error=function(e) e, warning=function(w) w)
+      }
+      
+    par_values <- as.numeric(par_values)  
+      
+    }
+    
+
+    #ADD A REASONABLE METRIC HERE FOR THE PARAMETERS
+    
+    
+    return(list(var_values, par_values))
+    
+  }
+  
 
   #SIR model
   if(type == "SIR"){
@@ -45,11 +102,18 @@ epimodellR <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
       return(res)
     }
     
+    ##########################################################################
+    #Adding user input functionality
+    values <- userinputR(variables, parameters)
+    var_values <- values[[1]]
+    par_values <- values[[2]]
+    
+    
     l <- list(type = type,
               variables = c(variables, "N"),
-              var_values = c(1, 0, 0, 1),
+              var_values = var_values,
               parameters = parameters,
-              par_values = c(0,0),
+              par_values = par_values,
               equations = list(dS = dS, dI = dI, dR = dR))
     class(l) <- "Epimodel"
   
@@ -83,12 +147,16 @@ epimodellR <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
       return(res)
     }
     
+    #userinput part
+    values <- userinputR(variables, parameters)
+    var_values <- values[[1]]
+    par_values <- values[[2]]
     
     l <- list(type = type,
               variables = c(unique(variables), "N"),
-              var_values = c(1, 0, 1),
+              var_values = var_values,
               parameters = parameters,
-              par_values = c(0,0),
+              par_values = par_values,
               equations = list(dS = dS, dI = dI))
     class(l) <- "Epimodel"
   
@@ -141,12 +209,16 @@ epimodellR <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
       return(res)
     }
     
+    #userinput part
+    values <- userinputR(variables, parameters)
+    var_values <- values[[1]]
+    par_values <- values[[2]]
     
     l <- list(type = type,
               variables = c(variables, "N"),
-              var_values = c(1, 0, 0, 0, 1),
+              var_values = var_values,
               parameters = parameters,
-              par_values = c(0,0,0),
+              par_values = par_values,
               equations = list(dS = dS, dI = dI, dR = dR, dD = dD))
     class(l) <- "Epimodel"
   
@@ -207,12 +279,17 @@ epimodellR <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
       return(res)
     }
     
+    #userinput part
+    values <- userinputR(variables, parameters)
+    var_values <- values[[1]]
+    par_values <- values[[2]]
+    
     
     l <- list(type = type,
               variables = c(variables, "N"),
-              var_values = c(1, 0, 0, 0, 1),
+              var_values = var_values,
               parameters = parameters,
-              par_values = c(0,0,0,0),
+              par_values = par_values,
               equations = list(dS = dS, dE = dE, dI = dI, dR = dR))
     class(l) <- "Epimodel"
   
@@ -262,13 +339,18 @@ epimodellR <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
       res <- a * E - (gamma + mu) * I 
       return(res)
     }
+    
+    #userinput part
+    values <- userinputR(variables, parameters)
+    var_values <- values[[1]]
+    par_values <- values[[2]]
 
     
     l <- list(type = type,
               variables = c(unique(variables), "N"),
-              var_values = c(1, 0, 0, 1),
+              var_values = var_values,
               parameters = parameters,
-              par_values = c(0,0,0,0, 0),
+              par_values = par_values,
               equations = list(dS = dS,dE = dE, dI = dI))
     class(l) <- "Epimodel"
   }
@@ -277,9 +359,7 @@ epimodellR <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
   
 }
 
-proba <- epimodellR("SIRD")
-proba$var_values <- c(0.8, 0.1, 0, 0, 1)
-proba$par_values <- c(0.8, 0.2, 0.02)
+
 
 
 

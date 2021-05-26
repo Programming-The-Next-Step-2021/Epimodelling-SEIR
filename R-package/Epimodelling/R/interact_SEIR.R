@@ -1,7 +1,383 @@
 #' @export
 
-interact_SEIR <- function(){
+EpiSimulator <- function(){
   require(shiny)
+  require(tidyverse)
+  
+  ################################################################################################
+  #This is the primitive version of the Shiny app based on the SEIR model
+  #Author: Bence Gergely
+  #Version: shiny_SEIR_05_05
+  #Language: R
+  #Language version: 4.0.5
+  #Reference: 
+  ### https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology
+  ### https://fabiandablander.com/r/Nonlinear-Infection.html
+  ###############################################################################################
+  
+  library(shiny)
+  library(tidyverse)
+  
+  #functions
+  #OOP version of the
+  
+  #'@export
+  epimodellR_shiny <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
+    
+    type <- match.arg(type)
+    variables <- strsplit(type, "")
+    variables <- unlist(variables)
+    
+    #SIR model
+    if(type == "SIR"){
+      
+      #parameters of the model
+      parameters <- c("beta", "gamma")
+      
+      #system of differential equations
+      dS <- function(variables, var_values, parameters, par_values){
+        
+        S <- var_values[variables == "S"]
+        I <- var_values[variables == "I"]
+        N <- var_values[variables == "N"]
+        beta <- par_values[parameters == "beta"]
+        
+        res <- -1 * (beta * I * S) / N
+        return(res)
+      }
+      
+      dI <- function(variables, var_values, parameters, par_values){
+        
+        S <- var_values[variables == "S"]
+        I <- var_values[variables == "I"]
+        N <- var_values[variables == "N"]
+        beta <- par_values[parameters == "beta"]
+        gamma <- par_values[parameters == "gamma"]
+        
+        res <- ((beta * I * S) / N) - (gamma * I)
+        return(res)
+      }
+      
+      dR <- function(variables, var_values, parameters, par_values){
+        
+        I <- var_values[variables == "I"]
+        gamma <- par_values[parameters == "gamma"]
+        
+        res <- gamma * I
+        return(res)
+      }
+      
+      l <- list(type = type,
+                variables = c(variables, "N"),
+                var_values = c(1, 0, 0, 1),
+                parameters = parameters,
+                par_values = c(0,0),
+                equations = list(dS = dS, dI = dI, dR = dR)
+      )
+      class(l) <- "Epimodel_shiny"
+      
+    } else if(type == "SIS"){ #SIS model
+      
+      #parameters of the model
+      parameters <- c("beta", "gamma")
+      
+      #system of differential equations
+      dS <- function(variables, var_values, parameters, par_values){
+        
+        S <- var_values[variables == "S"]
+        I <- var_values[variables == "I"]
+        N <- var_values[variables == "N"]
+        beta <- par_values[parameters == "beta"]
+        gamma <- par_values[parameters == "gamma"]
+        
+        res <- (-1 * (beta * I * S) / N) + (gamma * I)
+        return(res)
+      }
+      
+      dI <- function(variables, var_values, parameters, par_values){
+        
+        S <- var_values[variables == "S"]
+        I <- var_values[variables == "I"]
+        N <- var_values[variables == "N"]
+        beta <- par_values[parameters == "beta"]
+        gamma <- par_values[parameters == "gamma"]
+        
+        res <- ((beta * I * S) / N) + (gamma * I)
+        return(res)
+      }
+      
+      
+      l <- list(type = type,
+                variables = c(unique(variables), "N"),
+                var_values = c(1, 0, 1),
+                parameters = parameters,
+                par_values = c(0,0),
+                equations = list(dS = dS, dI = dI))
+      class(l) <- "Epimodel_shiny"
+      
+    } else if(type == "SIRD"){ #SIRD model
+      
+      #parameters of the model
+      parameters <- c("beta", "gamma", "mu")
+      
+      #system of differential equations
+      dS <- function(variables, var_values, parameters, par_values){
+        
+        S <- var_values[variables == "S"]
+        I <- var_values[variables == "I"]
+        N <- var_values[variables == "N"]
+        beta <- par_values[parameters == "beta"]
+        
+        res <- (-1 * (beta * I * S) / N)
+        return(res)
+      }
+      
+      dI <- function(variables, var_values, parameters, par_values){
+        
+        S <- var_values[variables == "S"]
+        I <- var_values[variables == "I"]
+        N <- var_values[variables == "N"]
+        beta <- par_values[parameters == "beta"]
+        gamma <- par_values[parameters == "gamma"]
+        mu <- par_values[parameters == "mu"]
+        
+        res <- ((beta * I * S) / N) - (gamma * I) - (mu *  I)
+        return(res)
+      }
+      
+      dR <- function(variables, var_values, parameters, par_values){
+        
+        
+        I <- var_values[variables == "I"]
+        gamma <- par_values[parameters == "gamma"]
+        
+        res <- gamma * I
+        return(res)
+      }
+      
+      dD <- function(variables, var_values, parameters, par_values){
+        
+        I <- var_values[variables == "I"]
+        mu <- par_values[parameters == "mu"]
+        
+        res <- mu * I
+        return(res)
+      }
+      
+      
+      l <- list(type = type,
+                variables = c(variables, "N"),
+                var_values = c(1, 0, 0, 0, 1),
+                parameters = parameters,
+                par_values = c(0,0,0),
+                equations = list(dS = dS, dI = dI, dR = dR, dD = dD))
+      class(l) <- "Epimodel_shiny"
+      
+    } else if(type == "SEIR"){
+      
+      #parameters of the model
+      parameters <- c("beta", "gamma", "mu", "a")
+      
+      #system of differential equations
+      dS <- function(variables, var_values, parameters, par_values){
+        
+        S <- var_values[variables == "S"]
+        I <- var_values[variables == "I"]
+        N <- var_values[variables == "N"]
+        beta <- par_values[parameters == "beta"]
+        gamma <- par_values[parameters == "gamma"]
+        mu <- par_values[parameters == "mu"]
+        
+        res <- mu * N - mu * S - (beta * S * I)/N
+        return(res)
+      }
+      
+      dE <- function(variables, var_values, parameters, par_values){
+        
+        S <- var_values[variables == "S"]
+        I <- var_values[variables == "I"]
+        N <- var_values[variables == "N"]
+        E <- var_values[variables == "E"]
+        beta <- par_values[parameters == "beta"]
+        mu <- par_values[parameters == "mu"]
+        a <- par_values[parameters == "a"]
+        
+        res <- (beta * S * I)/N - (mu + a) * E
+        return(res)
+      }
+      
+      dI <- function(variables, var_values, parameters, par_values){
+        
+        
+        I <- var_values[variables == "I"]
+        E <- var_values[variables == "E"]
+        gamma <- par_values[parameters == "gamma"]
+        mu <- par_values[parameters == "mu"]
+        a <- par_values[parameters == "a"]
+        
+        res <- a * E - (gamma + mu) * I
+        return(res)
+      }
+      
+      dR <- function(variables, var_values, parameters, par_values){
+        
+        I <- var_values[variables == "I"]
+        R <- var_values[variables == "R"]
+        gamma <- par_values[parameters == "gamma"]
+        mu <- par_values[parameters == "mu"]
+        
+        res <- gamma * I - mu * R
+        return(res)
+      }
+      
+      
+      l <- list(type = type,
+                variables = c(variables, "N"),
+                var_values = c(1, 0, 0, 0, 1),
+                parameters = parameters,
+                par_values = c(0,0,0,0),
+                equations = list(dS = dS, dE = dE, dI = dI, dR = dR))
+      class(l) <- "Epimodel_shiny"
+      
+    } else if(type == "SEIS"){
+      
+      
+      #parameters of the model
+      parameters <- c("beta", "gamma", "mu", "a", "lambda")
+      
+      #system of differential equations
+      dS <- function(variables, var_values, parameters, par_values){
+        
+        S <- var_values[variables == "S"]
+        I <- var_values[variables == "I"]
+        N <- var_values[variables == "N"]
+        beta <- par_values[parameters == "beta"]
+        mu <- par_values[parameters == "mu"]
+        gamma <- par_values[parameters == "gamma"]
+        lambda <- par_values[parameters == "lambda"]
+        
+        res <- lambda - (beta * S * I)/N - mu * S + gamma * I
+        return(res)
+      }
+      
+      dE <- function(variables, var_values, parameters, par_values){
+        
+        S <- var_values[variables == "S"]
+        I <- var_values[variables == "I"]
+        N <- var_values[variables == "N"]
+        E <- var_values[variables == "E"]
+        beta <- par_values[parameters == "beta"]
+        mu <- par_values[parameters == "mu"]
+        a <- par_values[parameters == "a"]
+        
+        res <- (beta * S * I)/N - (mu + a) * E
+        return(res)
+      }
+      
+      dI <- function(variables, var_values, parameters, par_values){
+        
+        I <- var_values[variables == "I"]
+        E <- var_values[variables == "E"]
+        gamma <- par_values[parameters == "gamma"]
+        mu <- par_values[parameters == "mu"]
+        a <- par_values[parameters == "a"]
+        
+        res <- a * E - (gamma + mu) * I
+        return(res)
+      }
+      
+      
+      l <- list(type = type,
+                variables = c(unique(variables), "N"),
+                var_values = c(1, 0, 0, 1),
+                parameters = parameters,
+                par_values = c(0,0,0,0, 0),
+                equations = list(dS = dS,dE = dE, dI = dI))
+      class(l) <- "Epimodel_shiny"
+    }
+    
+    return(l)
+    
+  }
+  
+  solve <- function(obj, ...){
+    UseMethod("solve", obj)
+  }
+  
+  solve.Epimodel_shiny <- function(obj, variable_values, parameter_values, delta_t = 0.01, days = 10){
+    
+    
+    times <- days / delta_t
+    
+    #setting up a container
+    res <- matrix(0, nrow = times, ncol = length(obj$variables) + 1, 
+                  dimnames = list(NULL, c(obj$variables , "time")))
+    
+    #setting inital values
+    res[1, ] <- c(variable_values, delta_t)
+    
+    #solving the system using Euler's method
+    for(i in 2:times){
+      
+      #calculating the next step in a small time interval based on the generalised equations 
+      for(vars in 1:(length(obj$variables)-2)){
+        res[i, vars] <- res[i-1, vars] + delta_t * obj$equations[[vars]](obj$variables, res[i-1, -(length(obj$variables)+1)], obj$parameters, parameter_values)
+      }
+      
+      #calculating the last variable in the system using the assumption of equal population
+      sum_variables <- sum(res[i, 1:(length(obj$variables)-2)])
+      res[i, (length(obj$variables)-1)] <- variable_values[obj$variables == "N"] - sum_variables
+      res[i, length(obj$variables)] <- variable_values[obj$variables == "N"]
+      res[i, (length(obj$variables)+1)] <- i * delta_t #calculating the time-step
+      
+    }
+    
+    class(res) <- c("Epimodelled", "matrix") 
+    return(res)
+    
+  }
+  
+  plot.Epimodelled <- function(res, main = ""){
+    
+    vars <- colnames(res)
+    vars <- vars[-(length(vars) : (length(vars) - 1)) ]
+    
+    time <- res[, ncol(res)]
+    
+    matplot(
+      time, 
+      res[, 1:(ncol(res) - 2)],
+      type = 'l',
+      axes = FALSE,
+      lty = 1, lwd = 2,
+      ylab = 'Population %', xlab = 'Days', ylim = c(0, 1), xlim = c(0, tail(time, 1)),
+      main = main, cex.main = 1.75, cex.lab = 1.25, font.main = 1, 
+      xaxs = 'i', yaxs = 'i'
+    )
+    
+    axis(1, cex.axis = 1.5)
+    axis(2, las = 2, cex.axis = 1.5)
+    
+    legend("topright",
+           legend = vars, 
+           lty = 1, lwd = 2,
+           bty = 'n', cex = 1.5, 
+           col = 1:length(vars)
+    )
+    
+    
+  }
+  
+  description <- list(beta = "The average number of connections per person per time interval",
+                      gamma = "Recovery rate (Recovered cases / Day)",
+                      mu = "Fatality rate (Fatal cases / Day)",
+                      lambda = "Birth rate (New member of the population / Day)",
+                      a = "Incubation period (1 / Average incubation in days)",
+                      S = "Susceptible",
+                      E = "Exposed",
+                      I = "Infected",
+                      R = "Recovered/Removed",
+                      D = "Deceased")
   
   ui <- fluidPage(
     sidebarPanel(
@@ -22,128 +398,91 @@ interact_SEIR <- function(){
           "))),
     conditionalPanel(condition="$('html').hasClass('shiny-busy')",
                      tags$div("Loading...",id="loadmessage")),
+    fluidRow(
+      plotOutput("plot")
+    ),
+
     
-    #input buttons    ,
-    numericInput("N", "Population size", value = 1,  min = 0),
-    numericInput("S0", "Initial number of Susceptible", value = 1,  min = 0),
-    numericInput("E0", "Initial number of Exposed", value = 1,  min = 0),
-    numericInput("I0", "Initial number of Infectous", value = 1,  min = 0),
-    numericInput("mu", "Vitality rate", value = 1,  min = 0),
-    numericInput("beta", "Contact rate", value = 1,  min = 0),
-    numericInput("a", "Incubation period", value = 1,  min = 0),
-    numericInput("gamma", "Recovery rate", value = 1,  min = 0),
-    numericInput("time", "Days", value = 1,  min = 0),
-    actionButton("click", "Run!",
-                 style = "background-color:#47CC83;
-                      color:#000000;
-                      border-color:#16400C;
-                      border-style:solid;
-                      border-width:2px;
-                      font-size:18px;"),
-    #output placeholders
-    plotOutput("plot")
-    
-    
+    fluidRow( style = "background-color: #F2F2F2;",
+              column(3, div(style = "margin: 1.5em;
+                             background-color: #F2F2F2;"),
+                     p("EpiSimulator",
+                       style = "font-weight: bold;
+                           font-size: 2.5em;
+                           "),
+                     selectInput("modelselectR", label = "Please choose the model!", choices = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")),
+                     textInput("Days", label = "How long do you want to simulate? (days)"),
+                     textInput("dt", label = "dt"),
+                     actionButton("click", "Solve and Plot!", 
+                                  style = "background-color: #4f94d8;
+                                   color: white;
+                                   font-weight: bold;
+                                   border: none;
+                                   border-radius: 5em;
+                                   margin-bottom: 1.5em;
+                                   ")
+              ),
+              column(4, offset = 1, div(style = "margin: 1.5em; 
+                                        background-color: #F2F2F2;"),
+                     uiOutput("vars")
+              ),
+              column(4, div(style = "margin: 1.5em;
+                             background-color: #F2F2F2;"),
+                     uiOutput("params")
+                     
+              )
+    )
   )
   
   
   server <- function(input, output, session) {
     
-    #setting the values - they are reactive to the click this can be changed
-    N <- eventReactive(input$click, {input$N})
-    S0 <- eventReactive(input$click, {input$S0})
-    E0 <- eventReactive(input$click, {input$E0})
-    I0 <- eventReactive(input$click, {input$I0})
-    mu <- eventReactive(input$click, {input$mu})
-    beta <- eventReactive(input$click, {input$beta})
-    a <- eventReactive(input$click, {input$a})
-    gamma <- eventReactive(input$click, {input$gamma})
-    time <- eventReactive(input$click, {input$time})
+    model <- reactive(input$modelselectR)  
+    model_object <- reactive(epimodellR_shiny(model()))
+    var_names <- reactive(model_object()$variables)
+    par_names <- reactive(model_object()$parameters)
+    
+    output$vars <- renderUI({
+      map(var_names()[-length(var_names())], ~ sliderInput(.x,
+                                                           label = paste("The proportion of ", description[[.x]], "in the population"),
+                                                           min =  0, max = 1, value = 0, step =  0.1))
+    })
+    
+    output$params <- renderUI({
+      map(par_names(), ~ numericInput(.x, label = description[[.x]],
+                                      min =  0, value = 0))
+    })
+    
+    var_values <- eventReactive(input$click, {              
+      c(unlist(map(var_names(), ~ input[[.x]])), 1)
+    })
     
     
-    #change it to source, but otherwise the solver for the system
-    solve_SEIR <- function(N, S0, E0, I0,  mu, beta, a, gamma, delta_t = 0.01, times = 100000){
-      
-      ####### setting up a container ##########
-      res <- matrix(0, nrow = times, ncol = 6, 
-                    dimnames = list(NULL, c("N", "S", "E", "I", "R", "time")))
-      
-      #setting inital values
-      res[1, ] <- c(N, S0, E0, I0, N-S0-E0-I0, delta_t)
-      
-      #differential equation for the change in S with respect to delta_t
-      dS <- function(N, S, I){
-        mu * N - mu * S - (beta * S * I)/N
-      }
-      
-      #differential equation for the change in E with respect to delta_t
-      dE <- function(N, S, I, E){
-        (beta * S * I)/N - (mu + a) * E
-      }
-      
-      #differential equation for the change in S with respect to delta_t
-      dI <- function(N, E, I){
-        a * E - (gamma + mu) * I 
-      }
-      
-      #solving the system using Euler's method
-      for(i in 2:times){
-        #saving in the previous state of the system
-        S_prev <- res[i-1, 2]
-        E_prev <- res[i-1, 3]
-        I_prev <- res[i-1, 4]
-        
-        #calculating the next step in a small time interval
-        S_next <- S_prev + delta_t * dS(N, S_prev, I_prev)  
-        E_next <- E_prev + delta_t * dE(N, S_prev, I_prev, E_prev)
-        I_next <- I_prev + delta_t * dI(N, E_prev, I_prev)
-        R_next <- N - S_next - E_next - I_next
-        timer <- i * delta_t
-        
-        res[i, ] <- c(N, S_next, E_next, I_next, R_next, timer) 
-      }
-      
-      return(res)
-      
-    }
+    par_values <- eventReactive(input$click, {
+      unlist(map(par_names(), ~ input[[.x]]))
+    })
     
     
-    #save the results of the solver
+    solved <- eventReactive(input$click, {
+      solve(obj = model_object(),
+            variable_values = var_values(),
+            parameter_values = par_values())
+    })
     
-    res <- eventReactive(input$click, {solve_SEIR(N(), 
-                                                  S0 = S0(), E0 = E0(), I0 = I0(),
-                                                  mu = mu(), beta = beta(), a = a(), gamma = gamma(), 
-                                                  times = time())})
-    
-    #change it to source something, but otherwise the code of the plot
-    plot_SIRS <- function(res, main = '') {
-      time <- res[, 6]
-      
-      matplot(
-        time, res[, 2:5]/res[1,1], type = 'l', axes = FALSE, lty = 1, lwd = 2,
-        ylab = 'Subpopulations', xlab = 'Days', ylim = c(0, 1),
-        main = main, cex.main = 1.75, cex.lab = 1.25,
-        font.main = 1, xaxs = 'i', yaxs = 'i', xlim = c(0, tail(time, 1))
-      )
-      
-      axis(1, cex.axis = 1.5)
-      axis(2, las = 2, cex.axis = 1.5)
-      legend(
-        30, 0.95, legend = c('S', 'I', 'R'),
-        lty = 1, lwd = 2, bty = 'n', cex = 1.5
-      )
-    }
+    #output$proba <- renderTable(var_values())
     
     
+    output$plot <- renderPlot(plot(solved()))
     
-    #render the plot based on the results
-    output$plot <- renderPlot(plot_SIRS(res()))
+    
     
   }
   
   
+  
   # Run the application 
   shinyApp(ui = ui, server = server)
+  
 }
 
 
