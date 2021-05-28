@@ -34,24 +34,20 @@ In <b>Manual mode</b> you can choose model, solve the equations and visualise th
 
 Call the <i>epimodellR()</i> function and select the model. It will ask you to select the variable and parameter values in the console.
 
-```{r model_setting,echo=FALSE}
-library(Epimodelling)
+```{r model_setting,echo=TRUE, eval=FALSE}
 mod <- epimodellR("SIR")
-
 ```
 
 Next, you can call the <i>solve()</i> method in the following way:
 
-```{r solve, echo=FALSE, eval = FALSE}
-
+```{r solve, echo=TRUE, eval = FALSE}
 mod_solved <- solve(mod, delta_t = 0.01, days = 100)
 
 ```
 
 Last, you can plot the results using the <i>plot</i> method:
 
-```{r plot, echo=FALSE, eval = FALSE}
-
+```{r plot, echo=TRUE, eval = FALSE}
 plot(mod_solved)
 
 ```
@@ -61,8 +57,7 @@ plot(mod_solved)
 
 Interactive mode is simple you just need to call:
 
-```{r interactive, echo=FALSE, eval = FALSE}
-
+```{r interactive, echo=TRUE, eval = FALSE}
 EpiSimulator()
 
 ```

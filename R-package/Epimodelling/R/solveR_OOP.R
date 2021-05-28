@@ -1,8 +1,25 @@
-#define a generic method
 #' @export
 solve <- function(obj, ...){
   UseMethod("solve", obj)
 }
+
+#'Method for solving Epimodels
+#'
+#'The solve is a method to \emph{solve()} the system of differential equations based on the \emph{Epimodel} object which encapsulates
+#'the starting values, parameters and the system of differential equations.
+#'
+#'@param obj Epimodel object from the function \emph{epimodellR()}
+#'@param delta_t rate of change in time (default = 0.01)
+#'@param days  number of days to simulate the model
+#'
+#'@return The function returns an \emph{Epimodelled} object which is a matrix containing the variables and the population size in every timestep
+#'
+#'@examples
+#'mod <- epimodellR("SIR")
+#'mod_solved <- solve(mod)
+#'head(mod_solved)
+#'
+#'
 #' @export
 solve.Epimodel <- function(obj, delta_t = 0.01, days = 10){
 

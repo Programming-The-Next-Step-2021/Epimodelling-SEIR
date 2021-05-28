@@ -3,22 +3,27 @@
 \docType{package}
 \name{Epimodelling}
 \alias{Epimodelling}
-\title{Package for analysis, simulation, visualisation of Compartmental Epidemiological Models}
+\title{Package for simulation and visualisation of Compartmental Epidemiological Models}
 \description{
-The package is currently under development
+The package has two main functionality: manual and interactive.
 }
-\section{simulate data under the model}{
+\section{Set up the model}{
 
-\emph{solve_SEIR}
-}
-
-\section{visualise the SEIR results}{
-
-\emph{plot_SEIR}
+\emph{epimodellR()}
 }
 
-\section{interactive shiny application based on SEIR}{
+\section{Solve the system of differential equations of the model}{
 
-\emph{interact_SEIR}
+\emph{solve.Epimodel()}
+}
+
+\section{Visualise the solved model}{
+
+\emph{plot.Epimodelled()}
+}
+
+\section{Interactive shiny application of the compartmental epidemiological models}{
+
+\emph{EpiSimulator}
 }
 
