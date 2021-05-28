@@ -1,0 +1,70 @@
+---
+title: "Epimodelling"
+author: "Bence Gergely"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Epimodelling}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## 1. What is Epimodelling?
+
+<b>Epimodelling</b> is a tool to simulate and visualise data under different deterministic compartmental epidemiological models. It has two main functionality:
+
+<ol>
+
+<li>Manual mode</li>
+
+<li>Interactive mode</li>
+
+</ol>
+
+In <b>Manual mode</b> you can choose model, solve the equations and visualise the results with few functions from R. In <b>Interactive mode</b> the user only calls the <i>EpiSimulator()</i> function which starts a Shiny web application.
+
+## 3. How it's done in the Manual mode
+
+Call the <i>epimodellR()</i> function and select the model. It will ask you to select the variable and parameter values in the console.
+
+```{r model_setting,echo=FALSE}
+library(Epimodelling)
+mod <- epimodellR("SIR")
+
+```
+
+Next, you can call the <i>solve()</i> method in the following way:
+
+```{r solve, echo=FALSE, eval = FALSE}
+
+mod_solved <- solve(mod, delta_t = 0.01, days = 100)
+
+```
+
+Last, you can plot the results using the <i>plot</i> method:
+
+```{r plot, echo=FALSE, eval = FALSE}
+
+plot(mod_solved)
+
+```
+
+## 4. Interactive mode
+
+
+Interactive mode is simple you just need to call:
+
+```{r interactive, echo=FALSE, eval = FALSE}
+
+EpiSimulator()
+
+```
+
+<i>That's all folks</i> 

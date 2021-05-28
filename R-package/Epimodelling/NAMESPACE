@@ -2,8 +2,8 @@
 
 S3method(plot,Epimodelled)
 S3method(solve,Epimodel)
+export(EpiSimulator)
 export(epimodellR)
-export(interact_SEIR)
 export(plot_SIRS)
 export(solve)
 export(solve_SEIR)
