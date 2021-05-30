@@ -1,5 +1,5 @@
 library(Epimodelling)
-
+library(testthat)
 
 context("Basic data format checking")
 
@@ -56,6 +56,7 @@ test_that("Correct calculations based on the automatic solve()", {
 
 
   #setting up the results matrix, variables starter values and parameters
+  delta_t <- 0.01
   times <- 10/0.01
   beta <- mod_SIR$par_values[1]
   gamma <- mod_SIR$par_values[2]
