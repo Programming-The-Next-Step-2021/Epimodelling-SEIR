@@ -1,16 +1,22 @@
-#' Package for analysis, simulation, visualisation of Compartmental Epidemiological Models
+#' Package for simulation and visualisation of Compartmental Epidemiological Models
 #'
-#' The package is currently under development
+#' The package has two main functionality: manual and interactive.
 #'
-#' @section simulate data under the model:
-#' \emph{solve_SEIR}
 #'
-#' @section visualise the SEIR results:
-#' \emph{plot_SEIR}
 #'
-#' @section  interactive shiny application based on SEIR:
-#' \emph{interact_SEIR}
+#' @section Set up the model:
+#' \emph{epimodellR()}
+#'
+#' @section Solve the system of differential equations of the model:
+#' \emph{solve.Epimodel()}
+#'
+#' @section Visualise the solved model:
+#' \emph{plot.Epimodelled()}
+#'
+#' @section Interactive shiny application of the compartmental epidemiological models:
+#' \emph{EpiSimulator}
 #'
 #' @docType package
 #' @name Epimodelling
+#'
 NULL

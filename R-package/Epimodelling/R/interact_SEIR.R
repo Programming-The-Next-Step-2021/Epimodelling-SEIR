@@ -400,8 +400,8 @@ EpiSimulator <- function(){
                            font-size: 2.5em;
                            "),
                      selectInput("modelselectR", label = "Please choose the model!", choices = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")),
-                     textInput("Days", label = "How long do you want to simulate? (days)"),
-                     textInput("dt", label = "dt"),
+                     textInput("Days", label = "How long do you want to simulate? (days)", placeholder = 10),
+                     textInput("dt", label = "dt", placeholder = 0.01),
                      actionButton("click", "Solve and Plot!",
                                   style = "background-color: #4f94d8;
                                    color: white;
@@ -442,7 +442,7 @@ EpiSimulator <- function(){
 
     output$params <- renderUI({
       map(par_names(), ~ numericInput(.x, label = description[[.x]],
-                                      min =  0, value = 0))
+                                      min =  0, value = 0, step = 0.05))
     })
 
     var_values <- eventReactive(input$click, {
@@ -458,7 +458,7 @@ EpiSimulator <- function(){
     solved <- eventReactive(input$click, {
       solve(obj = model_object(),
             variable_values = var_values(),
-            parameter_values = par_values())
+            parameter_values = par_values(), delta_t = as.numeric(input$dt), days = as.numeric(input$Days))
     })
 
     #output$proba <- renderTable(var_values())
