@@ -400,8 +400,8 @@ EpiSimulator <- function(){
                            font-size: 2.5em;
                            "),
                      selectInput("modelselectR", label = "Please choose the model!", choices = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")),
-                     textInput("Days", label = "How long do you want to simulate? (days)", placeholder = 10),
-                     textInput("dt", label = "dt", placeholder = 0.01),
+                     numericInput("Days", label = "How long do you want to simulate? (days)", value = 10),
+                     numericInput("dt", label = "dt", value = 0.01),
                      actionButton("click", "Solve and Plot!",
                                   style = "background-color: #4f94d8;
                                    color: white;
