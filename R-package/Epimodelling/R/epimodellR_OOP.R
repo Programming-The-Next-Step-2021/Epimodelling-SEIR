@@ -32,6 +32,22 @@ epimodellR <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
     for(vars in 1:length(variable)){
       var_values[vars] <- readline(prompt = paste("Please insert the", variable[vars], "value!"))
 
+      testR <- function(var_values){
+        if(var_values < 0){
+          warning("A population variable can't be negative")
+        }
+      }
+
+      tt_neg <- tryCatch(testR(var_values[vars]),error=function(e) e, warning=function(w) w)
+
+      while(is(tt_neg, "warning")){
+        cat("The parameters need to be non-negative!")
+        var_values[vars] <- readline(prompt = paste("Please insert the", variable[vars], "value!"))
+
+        tt_neg <- tryCatch(testR(var_values[vars]),error=function(e) e, warning=function(w) w)
+
+      }
+
       tt <- tryCatch(as.integer(var_values[vars]),error=function(e) e, warning=function(w) w)
 
       while(is(tt, "warning")){
@@ -374,6 +390,7 @@ epimodellR <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
 
 }
 
+#The same function as before, but with manual input for var_values and par_values
 #' @export
 epimodellR_manual <- function(type = c("SIR", "SIS", "SIRD", "SEIR", "SEIS")){
 
